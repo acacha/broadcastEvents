@@ -52295,12 +52295,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      newMessage: '',
       messages: [{ body: 'Missatge 1' }, { body: 'Missatge 2' }, { body: 'Missatge 3' }]
     };
+  },
+
+  methods: {
+    send: function send() {
+      axios.post('/chat_message', {
+        'body': this.newMessage
+      });
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -52323,12 +52335,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "ul",
-    _vm._l(_vm.messages, function(message) {
-      return _c("li", [_vm._v(_vm._s(message.body) + " ")])
-    })
-  )
+  return _c("div", [
+    _c(
+      "ul",
+      _vm._l(_vm.messages, function(message) {
+        return _c("li", [_vm._v(_vm._s(message.body) + " ")])
+      })
+    ),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.newMessage,
+          expression: "newMessage"
+        }
+      ],
+      attrs: { type: "text" },
+      domProps: { value: _vm.newMessage },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.newMessage = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", { on: { click: _vm.send } }, [_vm._v("Enviar")])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

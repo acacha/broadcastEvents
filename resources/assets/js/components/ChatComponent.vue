@@ -1,19 +1,30 @@
 <template>
-    <ul>
-        <li v-for="message in messages">{{ message.body }} </li>
-    </ul>
-
+    <div>
+        <ul>
+            <li v-for="message in messages">{{ message.body }} </li>
+        </ul>
+        <input type="text" v-model="newMessage">
+        <button @click="send">Enviar</button>
+    </div>
 </template>
 
 <script>
   export default {
     data() {
       return {
+        newMessage: '',
         messages: [
           { body: 'Missatge 1'},
           { body: 'Missatge 2'},
           { body: 'Missatge 3'}
         ]
+      }
+    },
+    methods: {
+      send() {
+        axios.post('/chat_message',{
+          'body': this.newMessage
+        })
       }
     },
     mounted() {

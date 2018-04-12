@@ -14,7 +14,6 @@ class ChatMessagesControllerTest extends TestCase
     /** @test */
     public function logged_user_can_add_message_to_chat()
     {
-        $this->withoutExceptionHandling();
         Event::fake();
 
         $logged_user = factory(User::class)->create();

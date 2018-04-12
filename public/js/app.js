@@ -13945,6 +13945,14 @@ if (token) {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
+var user = document.head.querySelector('meta[name="user"]');
+
+if (user) {
+  window.user = JSON.parse(user.content);
+} else {
+  console.error('No user found!!!');
+}
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -52298,16 +52306,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      activePeer: false,
       newMessage: '',
       messages: [{ body: 'Missatge 1' }, { body: 'Missatge 2' }, { body: 'Missatge 3' }]
     };
   },
 
   methods: {
+    tapParticipants: function tapParticipants() {
+      Echo.private('new-message').whisper('typing', {
+        name: user.name
+      });
+    },
     send: function send() {
       axios.post('/chat_message', {
         'body': this.newMessage
@@ -52323,6 +52338,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       console.log(event);
 
       _this.messages.push({ body: event.message });
+    }).listenForWhisper('typing', function (e) {
+      console.log(e.name);
+      _this.activePeer = {};
+      _this.activePeer.name = e.name;
+      setTimeout(function () {
+        _this.activePeer = false;
+      }, 1000);
     });
   }
 });
@@ -52355,6 +52377,7 @@ var render = function() {
       attrs: { type: "text" },
       domProps: { value: _vm.newMessage },
       on: {
+        keydown: _vm.tapParticipants,
         input: function($event) {
           if ($event.target.composing) {
             return
@@ -52364,7 +52387,13 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _c("button", { on: { click: _vm.send } }, [_vm._v("Enviar")])
+    _c("button", { on: { click: _vm.send } }, [_vm._v("Enviar")]),
+    _vm._v(" "),
+    _vm.activePeer
+      ? _c("span", [
+          _vm._v("User " + _vm._s(_vm.activePeer.name) + " is typing...")
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

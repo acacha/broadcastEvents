@@ -16,7 +16,8 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('new-message', function ($user) {
-    return true;
+//    return true;
 //    if (in_array($user,$chat->participants)) return true;
 //    return false;
+    return ['id' => $user->id, 'name' => $user->name];
 });
